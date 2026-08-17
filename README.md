@@ -173,7 +173,6 @@ Se incorporó un `Error Boundary` global con estados de carga, vacíos y reinten
   <img src="docs/screenshots/demo.gif" alt="Demo de la app" width="280" />
 </p>
 
-> Si aún no tienes el GIF, puedes dejar esta sección comentada o agregar el archivo en la carpeta docs/screenshots cuando lo tengas listo.
 
 ## Nota de entorno
 
