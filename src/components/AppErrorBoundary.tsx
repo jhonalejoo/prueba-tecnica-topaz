@@ -30,9 +30,7 @@ export class AppErrorBoundary extends React.Component<
       return (
         <View style={styles.container}>
           <Text style={styles.title}>Algo salio mal</Text>
-          <Text style={styles.message}>
-            Ocurrio un error inesperado.
-          </Text>
+          <Text style={styles.message}>Ocurrio un error inesperado.</Text>
           <Pressable onPress={this.handleRetry} style={styles.button}>
             <Text style={styles.buttonLabel}>Reintentar</Text>
           </Pressable>

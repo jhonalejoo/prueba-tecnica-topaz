@@ -1,11 +1,19 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import Ionicons from '@react-native-vector-icons/ionicons';
+import { FavoritesScreen } from '../screens/favorites/FavoritesScreen';
 import { ProductsStackNavigator } from './ProductsStackNavigator';
 import { RootTabParamList } from './types';
-import { FavoritesScreen } from '../screens/favorites/FavoritesScreen';
-import Ionicons from '@react-native-vector-icons/ionicons';
 
 const Tab = createBottomTabNavigator<RootTabParamList>();
+
+function ProductsTabIcon({ color, size }: { color: string; size: number }) {
+  return <Ionicons name="grid-outline" color={color} size={size} />;
+}
+
+function FavoritesTabIcon({ color, size }: { color: string; size: number }) {
+  return <Ionicons name="heart-outline" color={color} size={size} />;
+}
 
 export function AppNavigator() {
   return (
@@ -28,9 +36,7 @@ export function AppNavigator() {
         component={ProductsStackNavigator}
         options={{
           tabBarLabel: 'Productos',
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="grid-outline" color={color} size={size} />
-          ),
+          tabBarIcon: ProductsTabIcon,
         }}
       />
       <Tab.Screen
@@ -38,9 +44,7 @@ export function AppNavigator() {
         component={FavoritesScreen}
         options={{
           tabBarLabel: 'Favoritos',
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="heart-outline" color={color} size={size} />
-          ),
+          tabBarIcon: FavoritesTabIcon,
         }}
       />
     </Tab.Navigator>

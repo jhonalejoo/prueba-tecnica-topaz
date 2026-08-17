@@ -3,9 +3,11 @@ import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useQuery } from '@tanstack/react-query';
 import Animated, {
+  Easing,
   useAnimatedStyle,
   useSharedValue,
   withSpring,
+  withTiming,
 } from 'react-native-reanimated';
 import { getProductById } from '../../api/products';
 import { getReadableErrorMessage } from '../../api/http/errors';
@@ -28,9 +30,26 @@ export function ProductDetailScreen({ route }: Readonly<Props>) {
   const { productId } = route.params;
   const { isFavorite, toggleFavorite } = useFavorites(productId);
   const favoriteScale = useSharedValue(1);
+  const contentOpacity = useSharedValue(0);
+  const contentTranslateY = useSharedValue(24);
   const favoriteAnimatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: favoriteScale.value }],
   }));
+  const detailAnimatedStyle = useAnimatedStyle(() => ({
+    opacity: contentOpacity.value,
+    transform: [{ translateY: contentTranslateY.value }],
+  }));
+
+  React.useEffect(() => {
+    contentOpacity.value = withTiming(1, {
+      duration: 420,
+      easing: Easing.out(Easing.cubic),
+    });
+    contentTranslateY.value = withTiming(0, {
+      duration: 420,
+      easing: Easing.out(Easing.cubic),
+    });
+  }, [contentOpacity, contentTranslateY]);
 
   const productQuery = useQuery({
     queryKey: ['product-detail', productId],
@@ -74,7 +93,10 @@ export function ProductDetailScreen({ route }: Readonly<Props>) {
     <ScrollView contentContainerStyle={styles.content} style={styles.container}>
       <ProductImageCarousel images={galleryImages} />
 
-      <View style={styles.card}>
+      <Animated.View
+        style={[styles.card, detailAnimatedStyle]}
+        testID="detail-content"
+      >
         <View style={styles.titleRow}>
           <Text style={styles.title}>{product.title}</Text>
           <AnimatedPressable
@@ -117,7 +139,7 @@ export function ProductDetailScreen({ route }: Readonly<Props>) {
             ))}
           </View>
         </View>
-      </View>
+      </Animated.View>
     </ScrollView>
   );
 }

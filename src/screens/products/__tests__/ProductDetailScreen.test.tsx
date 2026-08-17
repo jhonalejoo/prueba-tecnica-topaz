@@ -63,11 +63,14 @@ describe('ProductDetailScreen', () => {
     expect(getByText('Tags')).toBeTruthy();
     expect(getAllByText('smartphones')).toHaveLength(2);
     expect(getByText('apple')).toBeTruthy();
+    expect(getByTestId('detail-content')).toBeTruthy();
 
     fireEvent.press(getByTestId('favorite-button'));
 
     await waitFor(() => {
       expect(getByText('Quitar favorito')).toBeTruthy();
+      expect(useFavoritesStore.getState().favoriteProducts).toHaveLength(1);
+      expect(useFavoritesStore.getState().favoriteProducts[0].id).toBe(7);
     });
   });
 });

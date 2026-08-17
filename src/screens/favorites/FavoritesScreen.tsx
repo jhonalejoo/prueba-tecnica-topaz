@@ -14,6 +14,11 @@ export function FavoritesScreen() {
         contentContainerStyle={styles.contentContainer}
         data={favoriteProducts}
         keyExtractor={item => item.id.toString()}
+        ListHeaderComponent={
+          <View style={styles.header}>
+            <Text style={styles.title}>Favoritos</Text>
+          </View>
+        }
         ListEmptyComponent={
           <View style={styles.emptyContainer}>
             <EmptyState message="No hay favoritos guardados localmente en el dispositivo." />
@@ -22,13 +27,6 @@ export function FavoritesScreen() {
               aqui sin recargar manualmente.
             </Text>
           </View>
-        }
-        ListHeaderComponent={
-          favoriteProducts.length > 0 ? (
-            <View style={styles.header}>
-              <Text style={styles.title}>Favoritos</Text>
-            </View>
-          ) : null
         }
         renderItem={({ item }) => (
           <FavoriteProductItem

@@ -4,6 +4,21 @@ jest.mock('react-native-mmkv', () => {
   const storage = new Map<string, string>();
 
   return {
+    createMMKV: () => ({
+      set: (key: string, value: string) => {
+        storage.set(key, value);
+      },
+      getString: (key: string) => storage.get(key),
+      delete: (key: string) => {
+        storage.delete(key);
+      },
+      remove: (key: string) => {
+        storage.delete(key);
+      },
+      clearAll: () => {
+        storage.clear();
+      },
+    }),
     MMKV: class MockMMKV {
       set(key: string, value: string) {
         storage.set(key, value);
@@ -14,6 +29,10 @@ jest.mock('react-native-mmkv', () => {
       }
 
       delete(key: string) {
+        storage.delete(key);
+      }
+
+      remove(key: string) {
         storage.delete(key);
       }
 
@@ -28,6 +47,10 @@ jest.mock('react-native-reanimated', () => {
   const { FlatList, View } = require('react-native');
 
   const mockModule = {
+    Easing: {
+      cubic: 3,
+      out: (value: number) => value,
+    },
     createAnimatedComponent: <T>(Component: T) => Component,
     FlatList,
     View,
@@ -50,7 +73,9 @@ jest.mock('react-native-reanimated', () => {
         handler(event.nativeEvent),
     useAnimatedStyle: (updater: () => object) => updater(),
     useSharedValue: (initialValue: number) => ({ value: initialValue }),
+    withDelay: (delay: number, animation: number) => animation,
     withSpring: (value: number) => value,
+    withTiming: (value: number) => value,
   };
 
   return {

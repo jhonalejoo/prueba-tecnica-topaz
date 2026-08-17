@@ -46,6 +46,8 @@ jest.mock('@react-navigation/native', () => ({
   NavigationContainer: ({ children }) => children,
 }));
 
+jest.mock('@react-native-vector-icons/ionicons', () => 'Ionicons');
+
 jest.mock('@tanstack/react-query', () => ({
   QueryClient: jest.fn().mockImplementation(() => ({})),
   QueryClientProvider: ({ children }) => children,
