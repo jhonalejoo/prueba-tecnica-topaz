@@ -1,97 +1,89 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# Prueba Tecnica Topaz
 
-# Getting Started
+Aplicacion React Native basada en DummyJSON.
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+## Decisiones tecnicas
 
-## Step 1: Start Metro
+### Estado: Zustand + React Query
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
+Se eligio Zustand junto con TanStack Query.
 
-To start the Metro dev server, run the following command from the root of your React Native project:
+- Zustand queda reservado para estado global de UI y negocio local, como favoritos.
+- React Query resuelve cache, sincronizacion, paginacion infinita, estados de carga y reintentos sobre datos remotos.
+- Esta separacion evita sobrecargar el store con estado de networking y mantiene cada responsabilidad en la capa correcta.
+
+### Persistencia local: MMKV
+
+Se eligio `react-native-mmkv` para favoritos por rendimiento y simplicidad.
+
+- La lectura y escritura son sincronas y rapidas para un dato pequeno y frecuente como favoritos.
+- Permite que la pestaña de Favoritos renderice solo desde almacenamiento local, sin backend ni cloud.
+- Se integra bien con Zustand mediante persistencia custom, manteniendo actualizacion reactiva entre pantallas.
+
+### Networking: axios
+
+Se eligio axios por tres motivos concretos.
+
+- Permite centralizar `baseURL`, `timeout` e interceptores en un cliente unico.
+- Simplifica el manejo consistente de errores HTTP, de red y timeout.
+- Soporta `AbortController` mediante `signal`, que se integra bien con React Query para cancelar requests al desmontar componentes o invalidar queries.
+
+### Cache de imagenes: @d11/react-native-fast-image
+
+Se usa `@d11/react-native-fast-image` para cache nativo de imagenes remotas y mejor estabilidad en listas largas frente al componente `Image` base.
+
+## Alcance implementado
+
+- Bottom Tab Navigator con 3 tabs.
+- Stack Navigator anidado para Productos.
+- Tipado de navegacion con `RootTabParamList` y `ProductsStackParamList`.
+- Pantalla de productos con:
+  - `FlatList`
+  - paginacion infinita con `limit` y `skip`
+  - busqueda con debounce de 400 ms
+  - filtro por categoria cargado desde API
+  - exclusividad entre busqueda y categoria
+  - estados de carga, error, vacio y reintento
+  - indicador y toggle de favoritos
+  - navegacion al detalle
+- Error Boundary global basico.
+- Cliente HTTP centralizado con manejo normalizado de errores.
+- Persistencia local de favoritos con MMKV.
+
+## Endpoints usados
+
+- `GET /products`
+- `GET /products/{id}`
+- `GET /products/search?q=`
+- `GET /products/categories`
+- `GET /products/category/{cat}`
+
+## Ejecutar el proyecto
 
 ```sh
-# Using npm
-npm start
-
-# OR using Yarn
-yarn start
+npm install
 ```
 
-## Step 2: Build and run your app
-
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
-
-### Android
+Para iOS, despues de instalar dependencias JS:
 
 ```sh
-# Using npm
-npm run android
-
-# OR using Yarn
-yarn android
-```
-
-### iOS
-
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
-
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
-
-```sh
-bundle install
-```
-
-Then, and every time you update your native dependencies, run:
-
-```sh
+cd ios
 bundle exec pod install
 ```
 
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
+Luego:
 
 ```sh
-# Using npm
+npm start
 npm run ios
-
-# OR using Yarn
-yarn ios
 ```
 
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
+o
 
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
+```sh
+npm run android
+```
 
-## Step 3: Modify your app
+## Nota de entorno
 
-Now that you have successfully run the app, let's make changes!
-
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
-
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
-
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
-
-## Congratulations! :tada:
-
-You've successfully run and modified your React Native App. :partying_face:
-
-### Now what?
-
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
-
-# Troubleshooting
-
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+React Native 0.81 pide Node `>= 20.19.4`. En este workspace se detecto Node `20.17.0`, que instala paquetes con warning de engine. Conviene subir Node antes de ejecutar la app en local para evitar problemas de toolchain.
