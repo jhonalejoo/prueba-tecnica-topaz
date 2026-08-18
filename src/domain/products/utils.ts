@@ -1,4 +1,4 @@
-import { NativeModules} from 'react-native';
+import { NativeModules } from 'react-native';
 
 export function calculateDiscountedPrice(
   price: number,
@@ -12,14 +12,14 @@ type CurrencyFormatterNativeModule = {
 };
 
 export function formatCurrency(value: number): string {
-  const module =
-    NativeModules.CurrencyFormatterModule as CurrencyFormatterNativeModule | undefined;
-
+  const module = NativeModules.CurrencyFormatterModule as
+    | CurrencyFormatterNativeModule
+    | undefined;
 
   if (module?.formatCurrencySync) {
     return module.formatCurrencySync(value);
   }
-  
+
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
