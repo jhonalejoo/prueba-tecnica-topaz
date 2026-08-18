@@ -173,7 +173,6 @@ Se incorporó un `Error Boundary` global con estados de carga, vacíos y reinten
   <img src="docs/screenshots/demo.gif" alt="Demo de la app" width="280" />
 </p>
 
-
 ## Nota de entorno
 
 La app está construida con React Native 0.81. En este proyecto se recomienda usar Node 20 y versiones recientes de Java, Ruby y CocoaPods para evitar problemas de toolchain y compilación.
