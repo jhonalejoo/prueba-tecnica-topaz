@@ -57,7 +57,7 @@ export function ProductDetailScreen({ route }: Readonly<Props>) {
   });
 
   if (productQuery.isPending) {
-    return <LoadingView message="Cargando detalle..." />;
+    return <LoadingView message="Cargando detalle..." variant="detail" />;
   }
 
   if (productQuery.isError) {

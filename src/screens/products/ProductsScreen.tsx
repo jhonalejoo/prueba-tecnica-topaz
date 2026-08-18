@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-  ActivityIndicator,
   FlatList,
   ListRenderItem,
   Pressable,
@@ -54,7 +53,7 @@ export function ProductsScreen({ navigation }: Readonly<Props>) {
   };
 
   if (productsQuery.isPending) {
-    return <LoadingView message="Cargando productos..." />;
+    return <LoadingView message="Cargando productos..." variant="catalog" />;
   }
 
   if (productsQuery.isError) {
@@ -156,12 +155,7 @@ function ListHeader({
       </View>
 
       {categoriesLoading ? (
-        <View style={styles.categoriesLoadingRow}>
-          <ActivityIndicator color="#b45309" />
-          <Text style={styles.categoriesLoadingText}>
-            Cargando categorias...
-          </Text>
-        </View>
+        <LoadingView message="Cargando categorias..." variant="inline" />
       ) : null}
 
       {categoriesError ? (
@@ -217,7 +211,7 @@ function ListFooter({
   onRetry: () => void;
 }>) {
   if (isFetchingNextPage) {
-    return <LoadingView message="Cargando mas productos..." />;
+    return <LoadingView message="Cargando mas productos..." variant="compact" />;
   }
 
   if (isFetchNextPageError) {
@@ -297,16 +291,6 @@ const styles = StyleSheet.create({
     color: '#b45309',
     fontSize: 12,
     fontWeight: '700',
-  },
-  categoriesLoadingRow: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    gap: 10,
-    marginBottom: 12,
-  },
-  categoriesLoadingText: {
-    color: '#6b7280',
-    fontSize: 14,
   },
   categoriesRow: {
     gap: 10,
